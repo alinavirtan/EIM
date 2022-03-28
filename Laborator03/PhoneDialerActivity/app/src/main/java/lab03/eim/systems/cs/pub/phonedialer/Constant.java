@@ -17,4 +17,6 @@ public interface Constant {
     };
 
     int PERMISSION_REQUEST_CALL_PHONE = 1;
+    int CONTACTS_MANAGER_REQUEST_CODE = 10;
+
 }

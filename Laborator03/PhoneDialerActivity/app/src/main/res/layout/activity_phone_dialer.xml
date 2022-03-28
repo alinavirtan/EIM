@@ -165,6 +165,15 @@
             android:src="@drawable/call"></ImageButton>
 
         <ImageButton
+            android:id="@+id/contact_manager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="5"
+            android:layout_column="1"
+            android:layout_gravity="center"
+            android:src="@drawable/contacts"></ImageButton>
+
+        <ImageButton
             android:id="@+id/hangup_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

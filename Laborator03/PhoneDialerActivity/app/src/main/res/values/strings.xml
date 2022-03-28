@@ -12,4 +12,5 @@
     <string name="tasta_9">9</string>
     <string name="tasta_diez">#</string>
     <string name="tasta_star">*</string>
+    <string name="phone_error">Please insert a phone number.</string>
 </resources>

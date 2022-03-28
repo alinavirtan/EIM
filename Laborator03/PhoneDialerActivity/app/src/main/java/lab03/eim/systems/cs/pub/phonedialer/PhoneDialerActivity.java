@@ -15,11 +15,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 public class PhoneDialerActivity extends AppCompatActivity {
     private EditText phoneNumber;
-    private GenericButtonClickListener genericButtonClickListener;
-    private BackButtonClickListener backButtonClickListener;
 
     private class GenericButtonClickListener implements View.OnClickListener {
         @Override
@@ -63,6 +62,31 @@ public class PhoneDialerActivity extends AppCompatActivity {
         }
     }
 
+    private class ContactsButtonClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            String number = phoneNumber.getText().toString();
+            if (number.length() > 0) {
+                Intent intent = new Intent("lab03.eim.systems.cs.pub.contactsmanager.intent.action.ContactsManagerActivity");
+                intent.putExtra("lab03.eim.systems.cs.pub.contactsmanager.PHONE_NUMBER_KEY", number);
+                startActivityForResult(intent, Constant.CONTACTS_MANAGER_REQUEST_CODE);
+            } else {
+                Toast.makeText(getApplication(), getResources().getString(R.string.phone_error), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        switch (requestCode) {
+            case Constant.CONTACTS_MANAGER_REQUEST_CODE:
+                Toast.makeText(this, "Activity returned with result " + resultCode, Toast.LENGTH_LONG).show();
+                break;
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,5 +106,8 @@ public class PhoneDialerActivity extends AppCompatActivity {
 
         ImageButton hangupBtn = (ImageButton) findViewById(R.id.hangup_button);
         hangupBtn.setOnClickListener(new HangupButtonClickListener());
+
+        ImageButton contactsBtn = (ImageButton) findViewById(R.id.contact_manager);
+        contactsBtn.setOnClickListener(new ContactsButtonClickListener());
     }
 }

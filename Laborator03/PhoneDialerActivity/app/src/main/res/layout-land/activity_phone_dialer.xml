@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:rowCount="3"
+        android:rowCount="4"
         android:columnCount="5"
         android:useDefaultMargins="true">
 
@@ -170,5 +170,15 @@
             android:layout_column="4"
             android:layout_gravity="center"
             android:src="@drawable/hangup"></ImageButton>
+
+        <ImageButton
+            android:id="@+id/contact_manager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="3"
+            android:layout_column="2"
+            android:layout_gravity="center"
+            android:src="@drawable/contacts"></ImageButton>
+
     </GridLayout>
 </LinearLayout>
