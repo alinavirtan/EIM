@@ -4,9 +4,13 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import ro.pub.cs.systems.eim.lab06.ftpserverwelcomemessage.general.Constants;
+import ro.pub.cs.systems.eim.lab06.ftpserverwelcomemessage.general.Utilities;
 
 public class FTPServerCommunicationAsyncTask extends AsyncTask<String, String, Void> {
 
@@ -29,12 +33,43 @@ public class FTPServerCommunicationAsyncTask extends AsyncTask<String, String, V
             // - the value does not start with Constants.FTP_MULTILINE_END_CODE2 = "220 "
             // append the line to the welcomeMessageTextView text view content (on the UI thread !!!) - publishProgress(...)
             // close the socket
-        } catch (Exception exception) {
-            Log.d(Constants.TAG, exception.getMessage());
+
+            socket = new Socket(params[0], Constants.FTP_PORT);
+            Log.v(Constants.TAG, "Connected to: " + socket.getInetAddress() + ":" + socket.getLocalPort());
+            BufferedReader bufferedReader = Utilities.getReader(socket);
+            String line = bufferedReader.readLine();
+            Log.v(Constants.TAG, "A line has been received from the FTP server: " + line);
+            if (line != null && line.startsWith(Constants.FTP_MULTILINE_START_CODE)) {
+                line = bufferedReader.readLine();
+                while (line != null && !line.equals(Constants.FTP_MULTILINE_END_CODE1) && !line.startsWith(Constants.FTP_MULTILINE_END_CODE2)) {
+                    Log.v(Constants.TAG, "A line has been received from the FTP server: " + line);
+                    publishProgress(line);
+                    line = bufferedReader.readLine();
+                }
+            }
+        } catch (UnknownHostException unknownHostException) {
+            Log.d(Constants.TAG, unknownHostException.getMessage());
             if (Constants.DEBUG) {
-                exception.printStackTrace();
+                unknownHostException.printStackTrace();
+            }
+        } catch (IOException ioException) {
+            Log.d(Constants.TAG, ioException.getMessage());
+            if (Constants.DEBUG) {
+                ioException.printStackTrace();
+            }
+        } finally {
+            try {
+                if (socket != null) {
+                    socket.close();
+                }
+            } catch (IOException ioException) {
+                Log.d(Constants.TAG, ioException.getMessage());
+                if (Constants.DEBUG) {
+                    ioException.printStackTrace();
+                }
             }
         }
+
         return null;
     }
 
@@ -47,6 +82,7 @@ public class FTPServerCommunicationAsyncTask extends AsyncTask<String, String, V
     protected void onProgressUpdate(String... progres) {
         // TODO exercise 4
         // append the progress[0] to the welcomeMessageTextView text view
+        welcomeMessageTextView.append(progres[0] + "\n");
     }
 
     @Override
